@@ -1,0 +1,230 @@
+{
+  "main": {
+    "id": "394a472b1b91e306",
+    "type": "split",
+    "children": [
+      {
+        "id": "cc6e1bf1c6eb9cc6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d69f32fc9d0d5591",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "1. Vibration ODEs/Finite Difference Discretization.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "66ccb442af8015dd",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "0. Nummerical Differentiation/1. Univariate Numerical Differentiation.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "f8a0999eb9123197",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "0. Nummerical Differentiation/2. Second Order Numerical Derivatives.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "d26a0eb2bab26fc6",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "1. Vibration ODEs/Finite Difference Discretization.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "35c664a26d0789b1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "1. Vibration ODEs/Finite Difference Discretization.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ],
+        "currentTab": 4
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "6b067834de362089",
+    "type": "split",
+    "children": [
+      {
+        "id": "3a1650771f137caa",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "caa9fae79dffdc09",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "7a2ccc0de03230ef",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "2e133d363a210b2c",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "271973c8d8e8d328",
+    "type": "split",
+    "children": [
+      {
+        "id": "aa1207ff9d006187",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "cd15714010ed9858",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "1. Vibration ODEs/Finite Difference Discretization.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "06bbd65e27a8a9f8",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "1. Vibration ODEs/Finite Difference Discretization.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "8b4abbd2c69288d9",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "615b4497eecf2069",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "1. Vibration ODEs/Finite Difference Discretization.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "obsidian-excalidraw-plugin:Create new drawing": false
+    }
+  },
+  "active": "35c664a26d0789b1",
+  "lastOpenFiles": [
+    "1. Vibration ODEs/Generalization - damping, nonlinearities and excitation.md",
+    "1. Vibration ODEs/Algorithms/2-plot.py",
+    "1. Vibration ODEs/Algorithms/2-plot",
+    "1. Vibration ODEs/Algorithms/1-plot.py",
+    "1. Vibration ODEs/Algorithms/2-output.csv",
+    "1. Vibration ODEs/Algorithms/2.linear_damping",
+    "1. Vibration ODEs/Algorithms/2.linear_damping.c",
+    "Pasted image 20240319212323.png",
+    "Pasted image 20240319212304.png",
+    "Pasted image 20240319211138.png",
+    "Pasted image 20240319210902.png",
+    "1. Vibration ODEs/Finite Difference Discretization.md",
+    "Pasted image 20240319131827.png",
+    "1. Vibration ODEs/Algorithms/plot.py",
+    "1. Vibration ODEs/Algorithms/plot.python",
+    "1. Vibration ODEs/Algorithms/1-output.csv",
+    "1. Vibration ODEs/Algorithms/1.finite_difference",
+    "0. Nummerical Differentiation/2. Second Order Numerical Derivatives.md",
+    "0. Nummerical Differentiation/3. Differentiating Data.md",
+    "Pasted image 20240314003940.png",
+    "Pasted image 20240314003904.png",
+    "0. Nummerical Differentiation/1. Univariate Numerical Differentiation.md",
+    "Images/Pasted image 20240305175419.png",
+    "Images/Pasted image 20240313211240.png",
+    "finite_differences/Lib/site-packages/matplotlib/mpl-data/sample_data/Minduka_Present_Blue_Pack.png",
+    "finite_differences/Lib/site-packages/numpy/random/LICENSE.md",
+    "1. Vibration ODEs/Numerical Differentiation.md",
+    "Excalidraw/Drawing 2024-03-05 17.47.45.excalidraw.md"
+  ]
+}
