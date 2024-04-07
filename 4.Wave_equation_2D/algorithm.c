@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 #include "auxilary.h"
 
 //Initial Condition
@@ -18,16 +19,23 @@ double f(double x, double y, double Nx, double Ny, int i, int j, double t){
 
 int main(int argc, char const *argv[])
 {
-    double a = 10, b=10, dx=0.1, dy = dx, T=10;
+    double a = 10, b=10, dx=1e-1, dy = dx;
     double *x, *y, **u, **unm1, **unm2;
     double t, c=1, Cx = 0.5, Cy=0.5, dt = Cx*dx/c, Cx2=Cx*Cx, Cy2=Cy*Cy;
-    int Nx = floor(a/dx), Ny = floor(b/dy);  
+    int Nx = floor(a/dx), Ny = floor(b/dy), T=10, Nt = floor(T/dt)+2;  
     int i, j, file_index=0;
-    char dir_path[] = "output/";
+    
+    FILE *time_file;
+    time_file = fopen("output/Execution_time.txt", "w");
 
-    FILE *output_test;
-    output_test = fopen("output_test.csv", "w");
+    FILE *output;
+    output = fopen("output/test_matrix.bin", "wb");
+    fwrite(&Nx, sizeof(int), 1, output);
+    fwrite(&Ny, sizeof(int), 1, output);
+    fwrite(&Nt, sizeof(int), 1, output);
 
+    clock_t begin, end;
+    begin = clock();
 
     x = malloc(Nx * sizeof(double));
     for (i=0; i<Nx; i++) x[i] = i*dx;
@@ -54,7 +62,7 @@ int main(int argc, char const *argv[])
         }
     }
 
-    write_dir_matrix(unm2, Nx, Ny, dir_path, file_index);
+    write_multiple_matrix(unm2, Nx, Ny, output);
     file_index++;
 
     // Calculating step 1
@@ -74,13 +82,13 @@ int main(int argc, char const *argv[])
         unm1[j][Ny-1] = 0;
     }
 
-    write_dir_matrix(unm1, Nx, Ny, dir_path, file_index);
+    write_multiple_matrix(unm1, Nx, Ny, output);
     file_index++;
     
     
     // Main Algorithm
     for(t=0; t<T; t+=dt){
-
+        printf("Current time step: %lf\n", t);
         //Boundary Conditions
         for(i=0; i<Nx; i++){
             u[0][i] = 0;
@@ -102,11 +110,26 @@ int main(int argc, char const *argv[])
         copy_matrix(unm2, unm1, Nx, Ny);
         copy_matrix(unm1, u, Nx, Ny);
 
-        write_dir_matrix(u, Nx, Ny, dir_path, file_index);
+        write_multiple_matrix(u, Nx, Ny,output);
         file_index++;
     }
 
-    write_matrix(u, Nx, Ny, output_test);
+    //tests for matrix file
+    // printf("Nx: %d\nNy: %d", Nx, Ny);
+    // FILE *output;
+
+    // output = fopen("matrix_test.bin", "wb");
+
+    // for(i=0; i<Ny; i++) fwrite(u[i], sizeof(double), Nx, output);
+    // // fwrite("\n\n", sizeof(char), 2, output);
+    // for(i=0; i<Ny; i++) fwrite(u[i], sizeof(double), Nx, output);
+    printf("files: %lf", T/dt + 2);
+    fclose(output);
+
+
+    end = clock();
+    fprintf(time_file, "Elapsed Time:%lf\ndx = dy = %g\na=%lf\nb=%lf\nT=%d\nc=%lf\nCx=%lf\nCy=%lf",
+    (double)(end-begin)/CLOCKS_PER_SEC, dx, a, b, T, c, Cx, Cy);
 
     return 0;
 }

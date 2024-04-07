@@ -60,14 +60,34 @@ void write_matrix(double **matrix, int row, int col, FILE *path){
     }
 }
 
+// void write_dir_matrix(double **matrix, int row, int col, char *dir_path, int index){
+//     int str_size = strlen(dir_path);
+//     char file[str_size+20];
+//     FILE *output;
+
+//     sprintf(file, "%s%d.csv", dir_path, index);
+//     output = fopen(file, "w");
+
+//     write_matrix(matrix, row, col, output);
+//     fclose(output);
+// }
+
+// Binary version
 void write_dir_matrix(double **matrix, int row, int col, char *dir_path, int index){
-    int str_size = strlen(dir_path);
+    int str_size = strlen(dir_path), i;
     char file[str_size+20];
     FILE *output;
 
-    sprintf(file, "%s%d.csv", dir_path, index);
-    output = fopen(file, "w");
+    sprintf(file, "%s%d.bin", dir_path, index);
+    output = fopen(file, "wb");
 
-    write_matrix(matrix, row, col, output);
+    for(i=0; i<row; i++) fwrite(matrix[i], sizeof(double), col, output);
+    // write_matrix(matrix, row, col, output);
     fclose(output);
+}
+
+//1 Binary file version
+void write_multiple_matrix(double **matrix, int row, int col, FILE *output){
+    int i;
+    for(i=0; i<row; i++) fwrite(matrix[i], sizeof(double), col, output);
 }
