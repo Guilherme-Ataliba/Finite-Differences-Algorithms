@@ -10,20 +10,34 @@ double I(double x, double y){
 }
 
 //Termo de fonte
-double f(double x, double y, double Nx, double Ny, int i, int j, double t){
-    if(i == Nx/2 && j==Ny/2){
-        return 5*sin(30*M_PI*t/20);
+double f(double x, double y, double Nx, double Ny, double x_max, double y_max, int i, int j, double t){
+
+    if(i<(Nx/2 + Nx/100) && i>(Nx/2 - Nx/100)){
+        if(j<(Ny/2 + Ny/100) && j>(Ny/2 - Ny/100)){
+            return 5*sin(30*M_PI*t/20);
+        }
     }
+    // if(i == Nx/2 && j==Ny/2){
+    //     // return 20*sin(30*M_PI*t/20);
+    //     return 5*sin(30*M_PI*t/20);
+    // }
     return 0;
 }
 
 int main(int argc, char const *argv[])
-{
-    double a = 10, b=10, dx=1e-1, dy = dx;
+{ 
+
+    int Nx = 10000, Ny = 10000, T=10;
+    double a = 10.0, b=10.0, dx=a/Nx, dy = b/Ny;
     double *x, *y, **u, **unm1, **unm2;
     double t, c=1, Cx = 0.5, Cy=0.5, dt = Cx*dx/c, Cx2=Cx*Cx, Cy2=Cy*Cy;
-    int Nx = floor(a/dx), Ny = floor(b/dy), T=10, Nt = floor(T/dt)+2;  
+    int Nt = floor(T/dt);  
     int i, j, file_index=0;
+    /*Frames
+        print_interval = total_files (T/dt) / frames
+    */
+    int frames = 200, print_interval = floor(T/dt)/frames, print_counter=1;
+    int n_files = Nt/print_interval + 2;
     
     FILE *time_file;
     time_file = fopen("output/Execution_time.txt", "w");
@@ -32,7 +46,7 @@ int main(int argc, char const *argv[])
     output = fopen("output/test_matrix.bin", "wb");
     fwrite(&Nx, sizeof(int), 1, output);
     fwrite(&Ny, sizeof(int), 1, output);
-    fwrite(&Nt, sizeof(int), 1, output);
+    fwrite(&n_files, sizeof(int), 1, output);
 
     clock_t begin, end;
     begin = clock();
@@ -69,7 +83,7 @@ int main(int argc, char const *argv[])
     for(j=1; j<Ny-1; j++){
         for(i=1; i<Nx-1; i++){
             unm1[j][i] = unm2[j][i] + 0.5*Cx2*(unm2[j][i+1] - 2*unm2[j][i] + unm2[j][i-1]) 
-            + 0.5*Cy2*(unm2[j+1][i] - 2*unm2[j][i] + unm2[j-1][i]) + 0.5*dx*dx*f(x[i], y[j], Nx, Ny, i, j, 1);
+            + 0.5*Cy2*(unm2[j+1][i] - 2*unm2[j][i] + unm2[j-1][i]) + 0.5*dx*dx*f(x[i], y[j], Nx, Ny, x[Nx-1], y[Ny-1], i, j, 1);
         }
     }
     //Enforce boundary conditions
@@ -88,7 +102,6 @@ int main(int argc, char const *argv[])
     
     // Main Algorithm
     for(t=0; t<T; t+=dt){
-        printf("Current time step: %lf\n", t);
         //Boundary Conditions
         for(i=0; i<Nx; i++){
             u[0][i] = 0;
@@ -103,33 +116,35 @@ int main(int argc, char const *argv[])
         for(j=1; j<Ny-1; j++){
             for(i=1; i<Nx-1; i++){
                 u[j][i] = -unm2[j][i] + 2*unm1[j][i] + Cx2*(unm1[j][i+1] - 2*unm1[j][i] + unm1[j][i-1]) + 
-                Cy2*(unm1[j+1][i] - 2*unm1[j][i] + unm1[j-1][i]) + dx*dx*f(x[i],y[i],Nx, Ny, i, j, t);
+                Cy2*(unm1[j+1][i] - 2*unm1[j][i] + unm1[j-1][i]) + dx*dx*f(x[i],y[i],Nx, Ny, x[Nx-1], y[Ny-1], i, j, t);
             }
         }
 
         copy_matrix(unm2, unm1, Nx, Ny);
         copy_matrix(unm1, u, Nx, Ny);
 
-        write_multiple_matrix(u, Nx, Ny,output);
+        if(print_counter >= print_interval){
+            printf("Current time step: %lf\n", t);
+            write_multiple_matrix(u, Nx, Ny,output);
+            print_counter=0;
+        }
+        print_counter++;
+
         file_index++;
     }
 
-    //tests for matrix file
-    // printf("Nx: %d\nNy: %d", Nx, Ny);
-    // FILE *output;
+    FILE *test;
+    test = fopen("output/test.bin", "wb");
+    write_multiple_matrix(u, Nx, Ny, test);
 
-    // output = fopen("matrix_test.bin", "wb");
 
-    // for(i=0; i<Ny; i++) fwrite(u[i], sizeof(double), Nx, output);
-    // // fwrite("\n\n", sizeof(char), 2, output);
-    // for(i=0; i<Ny; i++) fwrite(u[i], sizeof(double), Nx, output);
-    printf("files: %lf", T/dt + 2);
+    printf("Frames: %d\nPrint Interval: %d", frames + 2, print_interval);
     fclose(output);
 
 
     end = clock();
-    fprintf(time_file, "Elapsed Time:%lf\ndx = dy = %g\na=%lf\nb=%lf\nT=%d\nc=%lf\nCx=%lf\nCy=%lf",
-    (double)(end-begin)/CLOCKS_PER_SEC, dx, a, b, T, c, Cx, Cy);
+    fprintf(time_file, "Elapsed Time:%lf\ndx = %g \t dy = %g\nNx = %d \t Ny = %d\na=%lf\nb=%lf\nT=%d\nc=%lf\nCx=%lf \t Cy=%lf",
+    (double)(end-begin)/CLOCKS_PER_SEC, dx, dy, Nx, Ny, a, b, T, c, Cx, Cy);
 
     return 0;
 }
