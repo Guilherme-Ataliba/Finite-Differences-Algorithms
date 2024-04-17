@@ -6,14 +6,21 @@ import numpy as np
 import pandas as pd
 import os
 
-dt = np.dtype([])
-with open("output/test_matrix.bin", "rb") as f:
-    Nx = np.fromfile(f, dtype=np.int32, count=1)[0]
-    Ny = np.fromfile(f, dtype=np.int32, count=1)[0]
-    frames = np.fromfile(f, dtype=np.int32, count=1)[0]
-    data = np.fromfile(f).reshape(frames, Ny, Nx)
+def read_data(path, Nx, Ny):
+    global index
+    with open(path+str(index)+".bin", "rb") as f:
+        data = np.fromfile(f).reshape(Ny, Nx)
+    index += 1
+    return data
 
-a=b=10
+# ===============================
+
+dir_path = "output/multi_matrix/"
+index = 0
+
+exec_info = pd.read_csv(dir_path + "exec_info.csv", sep=",")
+Nx, Ny, n_files = exec_info["Nx"].iloc[0], exec_info["Ny"].iloc[0], exec_info["n_files"].iloc[0]
+a, b = exec_info["a"].iloc[0], exec_info["b"].iloc[0]
 
 x = np.linspace(0, a, Nx)
 y = np.linspace(0, b, Ny)
@@ -23,15 +30,28 @@ plt.rcParams["figure.autolayout"] = True
 
 fig, ax = plt.subplots(1, 1, subplot_kw={"projection": "3d"})
 
-z_lim = [-Nx/5000, Nx/5000]
+z_lim = [-0.2, 0.2]
 
-plot = [ax.plot_surface(xv, yv, data[0], cmap="coolwarm", vmin=2*z_lim[0]/10, vmax=2*z_lim[1]/10)]
-ax.set_zlim(-Nx/5000, Nx/5000)
+data = read_data(dir_path, Nx, Ny)  
+
+ax.set_zlim(z_lim[0], z_lim[1])
+
+plot = [ax.plot_surface(xv, yv, data, cmap="coolwarm", vmin=z_lim[0]/2, vmax=z_lim[1]/2)]
+fig.colorbar(plot[0], shrink=0.65, pad=0.1)
+
+ax.set_xlabel("x", fontsize=14)
+ax.set_ylabel("y", fontsize=14)
+ax.set_zlabel("f(x,y)", fontsize=14)
+plt.title(r"\underline{Equação de Onda 2D}", usetex=True, fontsize=20, x=0.675)
 
 def animate(i, Z_time, plot, z_lim):
+    print(i)
+    data = read_data(dir_path, Nx, Ny)
+    
     plot[0].remove()
-    plot[0] = ax.plot_surface(xv, yv, data[i], cmap="coolwarm", vmin=2*z_lim[0]/10, vmax=2*z_lim[1]/10)
+    plot[0] = ax.plot_surface(xv, yv, data, cmap="coolwarm", vmin=z_lim[0]/2, vmax=z_lim[1]/2)
 
-
-ani = animation.FuncAnimation(fig, animate, frames=frames, fargs=(data, plot, z_lim), interval=30, repeat=True)
-ani.save("images/ani_test.gif", writer="pillow", fps=60, dpi=100)
+# Tirei -1
+frames = n_files-2
+ani = animation.FuncAnimation(fig, animate, frames=frames, fargs=(data, plot, z_lim), repeat=True)
+ani.save("images/ani_test.gif", writer="pillow", fps=16, dpi=200)

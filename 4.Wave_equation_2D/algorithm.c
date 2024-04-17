@@ -27,26 +27,26 @@ double f(double x, double y, double Nx, double Ny, double x_max, double y_max, i
 int main(int argc, char const *argv[])
 { 
 
-    int Nx = 10000, Ny = 10000, T=10;
+    int Nx = 6500, Ny = 6500, T=10;
     double a = 10.0, b=10.0, dx=a/Nx, dy = b/Ny;
     double *x, *y, **u, **unm1, **unm2;
     double t, c=1, Cx = 0.5, Cy=0.5, dt = Cx*dx/c, Cx2=Cx*Cx, Cy2=Cy*Cy;
     int Nt = floor(T/dt);  
-    int i, j, file_index=0;
-    /*Frames
-        print_interval = total_files (T/dt) / frames
-    */
-    int frames = 200, print_interval = floor(T/dt)/frames, print_counter=1;
-    int n_files = Nt/print_interval + 2;
+    int i, j;
+    
+    int frames = 200, print_interval = floor(T/dt)/frames, print_counter=print_interval;
+    int n_files = frames+2;
     
     FILE *time_file;
     time_file = fopen("output/Execution_time.txt", "w");
 
-    FILE *output;
-    output = fopen("output/test_matrix.bin", "wb");
-    fwrite(&Nx, sizeof(int), 1, output);
-    fwrite(&Ny, sizeof(int), 1, output);
-    fwrite(&n_files, sizeof(int), 1, output);
+    char dir_path[] = "output/multi_matrix/";
+    int file_index=0;
+    
+    FILE *exec_info;
+    exec_info = fopen("output/multi_matrix/exec_info.csv", "w");
+    fprintf(exec_info, "Nx,Ny,n_files,a,b\n%d,%d,%d,%lf,%lf", Nx, Ny, n_files, a, b);
+    fclose(exec_info);
 
     clock_t begin, end;
     begin = clock();
@@ -69,6 +69,7 @@ int main(int argc, char const *argv[])
         unm2[i] = malloc(Nx * sizeof(double));
     }
     
+    printf("Calculating step 0\n");
     //Calculating step 0 (initial condition)
     for(j=0; j<Ny; j++){
         for(i=0; i<Nx; i++){
@@ -76,9 +77,9 @@ int main(int argc, char const *argv[])
         }
     }
 
-    write_multiple_matrix(unm2, Nx, Ny, output);
-    file_index++;
+    write_dir_matrix(unm2, Nx, Ny, dir_path, &file_index);
 
+    printf("Calculating step 1\n");
     // Calculating step 1
     for(j=1; j<Ny-1; j++){
         for(i=1; i<Nx-1; i++){
@@ -96,8 +97,7 @@ int main(int argc, char const *argv[])
         unm1[j][Ny-1] = 0;
     }
 
-    write_multiple_matrix(unm1, Nx, Ny, output);
-    file_index++;
+    write_dir_matrix(unm1, Nx, Ny, dir_path, &file_index);
     
     
     // Main Algorithm
@@ -125,21 +125,14 @@ int main(int argc, char const *argv[])
 
         if(print_counter >= print_interval){
             printf("Current time step: %lf\n", t);
-            write_multiple_matrix(u, Nx, Ny,output);
+            write_dir_matrix(u, Nx, Ny, dir_path, &file_index);
             print_counter=0;
         }
         print_counter++;
-
-        file_index++;
     }
-
-    FILE *test;
-    test = fopen("output/test.bin", "wb");
-    write_multiple_matrix(u, Nx, Ny, test);
 
 
     printf("Frames: %d\nPrint Interval: %d", frames + 2, print_interval);
-    fclose(output);
 
 
     end = clock();

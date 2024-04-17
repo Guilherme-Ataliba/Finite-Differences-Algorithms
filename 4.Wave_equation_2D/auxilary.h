@@ -73,16 +73,16 @@ void write_matrix(double **matrix, int row, int col, FILE *path){
 // }
 
 // Binary version
-void write_dir_matrix(double **matrix, int row, int col, char *dir_path, int index){
+void write_dir_matrix(double **matrix, int row, int col, char *dir_path, int *index){
     int str_size = strlen(dir_path), i;
     char file[str_size+20];
     FILE *output;
 
-    sprintf(file, "%s%d.bin", dir_path, index);
+    sprintf(file, "%s%d.bin", dir_path, *index);
+    (*index)++;
     output = fopen(file, "wb");
 
     for(i=0; i<row; i++) fwrite(matrix[i], sizeof(double), col, output);
-    // write_matrix(matrix, row, col, output);
     fclose(output);
 }
 
