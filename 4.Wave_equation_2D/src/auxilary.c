@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include "../include/auxilary.h"
 
 void copy_vector(double *arr1, double *arr2, int size){
     //Copy arr1 into arr2
@@ -59,18 +60,6 @@ void write_matrix(double **matrix, int row, int col, FILE *path){
         fprintf(path, "\n");
     }
 }
-
-// void write_dir_matrix(double **matrix, int row, int col, char *dir_path, int index){
-//     int str_size = strlen(dir_path);
-//     char file[str_size+20];
-//     FILE *output;
-
-//     sprintf(file, "%s%d.csv", dir_path, index);
-//     output = fopen(file, "w");
-
-//     write_matrix(matrix, row, col, output);
-//     fclose(output);
-// }
 
 // Binary version
 void write_dir_matrix(double **matrix, int row, int col, char *dir_path, int *index){
