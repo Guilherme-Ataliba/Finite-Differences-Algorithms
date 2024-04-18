@@ -8,6 +8,7 @@ BUILD = build
 SRC = source
 BIN = scripts
 FIG = figures
+OUTPUT = output
 
 # Files
 GIF_FILE = figure.gif
@@ -20,30 +21,57 @@ OBJS = $(BUILD)/algorithm.o $(BUILD)/auxilary.o
 all: $(SRC)/algorithm
 
 .PHONY: run
-run: $(SRC)/algorithm $(SRC)/plot.py
+run: $(SRC)/algorithm $(SRC)/plot.py | $(SRC) $(BIN) $(OUTPUT)
 	./$(BIN)/algorithm 
 	PY $(SRC)/plot.py
 	make clean
 
-$(SRC)/algorithm: $(OBJS)
+$(SRC)/algorithm: $(OBJS) | $(SRC) $(BIN)
 	$(CC) $^ -o $(BIN)/$(@F)
 
-$(BUILD)/%.o: $(SRC)/%.c $(DEPS)
+$(BUILD)/%.o: $(SRC)/%.c $(DEPS) | $(SRC) $(BUILD)
 	$(CC) -c $< -o $@
 	
 
 .PHONY: clean
-clean: 
+clean: | $(BUILD)
 	rm -f $(BUILD)/*.o
 	
 
 .PHONY: remove
-remove: 
+remove: | $(BIN)
 	rm -f $(BIN)/*.exe
 
 .PHONY: graph
-graph: $(FIG)/$(GIF_FILE)
+graph: $(FIG)/$(GIF_FILE) | $(FIG)
 	start "$(FIG)/$(GIF_FILE)"
 
-$(FIG)/$(GIF_FILE): 
+$(FIG)/$(GIF_FILE): | $(FIG)
 	make run
+
+
+# Directories Creation
+INCLUDE = include
+BUILD = build
+SRC = source
+BIN = scripts
+FIG = figures
+OUTPUT = output
+
+$(INCLUDE):
+	mkdir $@
+
+$(BUILD):
+	mkdir $@
+
+$(SRC):
+	mkdir $@
+
+$(BIN):
+	mkdir $@
+
+$(FIG):
+	mkdir $@
+
+$(OUTPUT):
+	mkdir $@
