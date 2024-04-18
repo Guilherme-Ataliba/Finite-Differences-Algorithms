@@ -44,14 +44,18 @@ ax.set_ylabel("y", fontsize=14)
 ax.set_zlabel("f(x,y)", fontsize=14)
 plt.title(r"\underline{Equação de Onda 2D}", usetex=True, fontsize=20, x=0.675)
 
+print("=-=-=-=-=-=-=-=-=-=-= Start of Figure Processing =-=-=-=-=-=-=-=-=-=-=")
+
 def animate(i, Z_time, plot, z_lim):
-    print(i)
+    print(f"{i+1}/{n_files-2}")
     data = read_data(dir_path, Nx, Ny)
     
     plot[0].remove()
     plot[0] = ax.plot_surface(xv, yv, data, cmap="coolwarm", vmin=z_lim[0]/2, vmax=z_lim[1]/2)
 
-# Tirei -1
+
 frames = n_files-2
 ani = animation.FuncAnimation(fig, animate, frames=frames, fargs=(data, plot, z_lim), repeat=True)
-ani.save("images/ani_test.gif", writer="pillow", fps=16, dpi=200)
+ani.save("figures/figure.gif", writer="pillow", fps=16, dpi=200)
+
+print("=-=-=-=-=-=-=-=-=-=-= End of Figure Processing =-=-=-=-=-=-=-=-=-=-=")

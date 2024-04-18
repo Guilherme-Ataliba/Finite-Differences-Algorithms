@@ -5,8 +5,12 @@ PY = python
 # Directories
 INCLUDE = include
 BUILD = build
-SRC = src
-BIN = bin
+SRC = source
+BIN = scripts
+FIG = figures
+
+# Files
+GIF_FILE = figure.gif
 
 # Dependencies
 DEPS = $(INCLUDE)/auxilary.h
@@ -16,13 +20,13 @@ OBJS = $(BUILD)/algorithm.o $(BUILD)/auxilary.o
 all: $(SRC)/algorithm
 
 .PHONY: run
-run: $(SRC)/algorithm src/plot.py
-	./bin/algorithm 
-	PY src/plot.py
+run: $(SRC)/algorithm $(SRC)/plot.py
+	./$(BIN)/algorithm 
+	PY $(SRC)/plot.py
 	make clean
 
 $(SRC)/algorithm: $(OBJS)
-	$(CC) $^ -o bin/$(@F)
+	$(CC) $^ -o $(BIN)/$(@F)
 
 $(BUILD)/%.o: $(SRC)/%.c $(DEPS)
 	$(CC) -c $< -o $@
@@ -35,11 +39,11 @@ clean:
 
 .PHONY: remove
 remove: 
-	rm -f bin/*.exe
+	rm -f $(BIN)/*.exe
 
 .PHONY: graph
-graph: images/ani_test.gif
-	start "images/ani_test.gif"
+graph: $(FIG)/$(GIF_FILE)
+	start "$(FIG)/$(GIF_FILE)"
 
-images/ani_test.gif: 
+$(FIG)/$(GIF_FILE): 
 	make run

@@ -27,14 +27,14 @@ double f(double x, double y, double Nx, double Ny, double x_max, double y_max, i
 int main(int argc, char const *argv[])
 { 
 
-    int Nx = 100, Ny = 100, T=10;
+    int Nx = 6500, Ny = 6500, T=10;
     double a = 10.0, b=10.0, dx=a/Nx, dy = b/Ny;
     double *x, *y, **u, **unm1, **unm2;
     double t, c=1, Cx = 0.5, Cy=0.5, dt = Cx*dx/c, Cx2=Cx*Cx, Cy2=Cy*Cy;
     int Nt = floor(T/dt);  
     int i, j;
     
-    int frames = 10, print_interval = floor(T/dt)/frames, print_counter=print_interval;
+    int frames = 202, print_interval = floor(T/dt)/frames, print_counter=print_interval;
     int n_files = frames+2;
     
     FILE *time_file;
@@ -69,6 +69,8 @@ int main(int argc, char const *argv[])
         unm2[i] = malloc(Nx * sizeof(double));
     }
     
+    printf("=-=-=-=-=-=-=-=-=-=-= Start of Processing =-=-=-=-=-=-=-=-=-=-=\n");
+
     printf("Calculating step 0\n");
     //Calculating step 0 (initial condition)
     for(j=0; j<Ny; j++){
@@ -124,13 +126,14 @@ int main(int argc, char const *argv[])
         copy_matrix(unm1, u, Nx, Ny);
 
         if(print_counter >= print_interval){
-            printf("Current time step: %lf\n", t);
+            printf("Current time step: %.2lf/%d\n", t+1, T);
             write_dir_matrix(u, Nx, Ny, dir_path, &file_index);
             print_counter=0;
         }
         print_counter++;
     }
 
+    printf("=-=-=-=-=-=-=-=-=-=-= End of Processing =-=-=-=-=-=-=-=-=-=-=\n");
 
     printf("Frames: %d\nPrint Interval: %d\n", frames + 2, print_interval);
 
