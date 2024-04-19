@@ -27,14 +27,14 @@ double f(double x, double y, double Nx, double Ny, double x_max, double y_max, i
 int main(int argc, char const *argv[])
 { 
 
-    int Nx = 6500, Ny = 6500, T=10;
+    int Nx = 100, Ny = 100, T=10;
     double a = 10.0, b=10.0, dx=a/Nx, dy = b/Ny;
     double *x, *y, **u, **unm1, **unm2;
     double t, c=1, Cx = 0.5, Cy=0.5, dt = Cx*dx/c, Cx2=Cx*Cx, Cy2=Cy*Cy;
     int Nt = floor(T/dt);  
     int i, j;
     
-    int frames = 202, print_interval = floor(T/dt)/frames, print_counter=print_interval;
+    int frames = 4, print_interval = floor(T/dt)/frames, print_counter=print_interval;
     int n_files = frames+2;
     
     FILE *time_file;

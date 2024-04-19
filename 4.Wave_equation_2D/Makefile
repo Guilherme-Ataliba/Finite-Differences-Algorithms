@@ -9,6 +9,7 @@ SRC = source
 BIN = scripts
 FIG = figures
 OUTPUT = output
+MULTI_MATRIX = $(OUTPUT)/multi_matrix  # Directory used to house each matrix output
 
 # Files
 GIF_FILE = figure.gif
@@ -21,7 +22,7 @@ OBJS = $(BUILD)/algorithm.o $(BUILD)/auxilary.o
 all: $(SRC)/algorithm
 
 .PHONY: run
-run: $(SRC)/algorithm $(SRC)/plot.py | $(SRC) $(BIN) $(OUTPUT)
+run: $(SRC)/algorithm $(SRC)/plot.py | $(SRC) $(BIN) $(OUTPUT) $(MULTI_MATRIX)
 	./$(BIN)/algorithm 
 	PY $(SRC)/plot.py
 	make clean
@@ -51,13 +52,6 @@ $(FIG)/$(GIF_FILE): | $(FIG)
 
 
 # Directories Creation
-INCLUDE = include
-BUILD = build
-SRC = source
-BIN = scripts
-FIG = figures
-OUTPUT = output
-
 $(INCLUDE):
 	mkdir $@
 
@@ -74,4 +68,7 @@ $(FIG):
 	mkdir $@
 
 $(OUTPUT):
+	mkdir $@
+
+$(MULTI_MATRIX): 
 	mkdir $@
