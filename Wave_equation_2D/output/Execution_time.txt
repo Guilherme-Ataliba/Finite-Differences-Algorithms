@@ -1,6 +1,6 @@
-Elapsed Time:0.099000
-dx = 0.1 	 dy = 0.1
-Nx = 100 	 Ny = 100
+Elapsed Time:1.199000
+dx = 0.05 	 dy = 0.05
+Nx = 200 	 Ny = 200
 a=10.000000
 b=10.000000
 T=10

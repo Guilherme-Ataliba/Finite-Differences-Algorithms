@@ -1,6 +1,7 @@
 # Compilers
 CC = gcc
 PY = python
+CFLAGS = -lm -pg
 
 # Directories
 INCLUDE = include
@@ -28,10 +29,10 @@ run: $(SRC)/algorithm $(SRC)/plot.py | $(SRC) $(BIN) $(OUTPUT) $(MULTI_MATRIX)
 	make clean
 
 $(SRC)/algorithm: $(OBJS) | $(SRC) $(BIN)
-	$(CC) $^ -o $(BIN)/$(@F)
+	$(CC) $(CFLAGS) $^ -o $(BIN)/$(@F)
 
 $(BUILD)/%.o: $(SRC)/%.c $(DEPS) | $(SRC) $(BUILD)
-	$(CC) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 	
 
 .PHONY: clean
@@ -42,6 +43,8 @@ clean: | $(BUILD)
 .PHONY: remove
 remove: | $(BIN)
 	rm -f $(BIN)/*.exe
+	rm -f $(OUTPUT)/Execution_time.txt
+	rm -f $(OUTPUT)/multi_matrix/*
 
 .PHONY: graph
 graph: $(FIG)/$(GIF_FILE) | $(FIG)

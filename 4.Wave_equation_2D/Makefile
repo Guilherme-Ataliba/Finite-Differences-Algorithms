@@ -1,6 +1,7 @@
 # Compilers
 CC = gcc
 PY = python
+CFLAGS = -lm -pg
 
 # Directories
 INCLUDE = include
