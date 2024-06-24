@@ -22,6 +22,13 @@ void copy_matrix(double **m1, double **m2, int row, int col){
     }
 }
 
+void switch_matrices(double ***u, double ***unm1, double ***unm2, double ***aux){
+    *aux = *u;
+    *u = *unm2;
+    *unm2 = *unm1;
+    *unm1 = *aux;
+}
+
 void print_vector(double *vector, int size){
     int i=0;
     for(i=0; i<size; i++){

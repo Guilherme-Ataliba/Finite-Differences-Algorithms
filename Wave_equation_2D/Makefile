@@ -1,7 +1,7 @@
 # Compilers
 CC = gcc
 PY = python
-CFLAGS = -lm -pg
+CFLAGS = -lm -pg -fopenmp
 
 # Directories
 INCLUDE = include
@@ -25,8 +25,11 @@ all: $(SRC)/algorithm
 .PHONY: run
 run: $(SRC)/algorithm $(SRC)/plot.py | $(SRC) $(BIN) $(OUTPUT) $(MULTI_MATRIX)
 	./$(BIN)/algorithm 
-	PY $(SRC)/plot.py
 	make clean
+
+.PHONY: plot
+plot: 
+	$(PY) $(SRC)/plot.py
 
 $(SRC)/algorithm: $(OBJS) | $(SRC) $(BIN)
 	$(CC) $(CFLAGS) $^ -o $(BIN)/$(@F)

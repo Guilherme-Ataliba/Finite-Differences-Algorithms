@@ -3,6 +3,7 @@
 
 void copy_vector(double *arr1, double *arr2, int size);
 void copy_matrix(double **m1, double **m2, int row, int col);
+void switch_matrices(double ***u, double ***unm1, double ***unm2, double ***aux);
 void print_vector(double *vector, int size);
 void print_matrix(double **matrix, int row, int col);
 void write_vector(double *vector, int size, FILE *path);
