@@ -23,8 +23,8 @@ manipulation
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 
 // Macro Definitions  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-#define Nx 1600
-#define Ny 1600
+#define Nx 800
+#define Ny 800
 #define T 2
 #define a 10.0
 #define b 10.0
@@ -105,6 +105,19 @@ void step_one(double **unm1, double **unm2, double *x, double *y, double Cx2,
     }
 }
 
+void next_step(double **u, double **unm1, double **unm2, double *x, double *y, double t,
+                double Cx2, double Cy2, double dt2){
+    int i, j;
+
+    for(j=1; j<Ny-1; j++){
+        for(i=1; i<Nx-1; i++){
+            u[j][i] = -unm2[j][i] + 2*unm1[j][i] + Cx2*(unm1[j][i+1] - 2*unm1[j][i] + unm1[j][i-1]) + 
+            Cy2*(unm1[j+1][i] - 2*unm1[j][i] + unm1[j-1][i]) 
+            + dt2*f(x[i],y[i], i, j, t);
+        }
+    }
+}
+
 void enforce_boundary_conditions(double **U){
     int i, j;
 
@@ -115,61 +128,6 @@ void enforce_boundary_conditions(double **U){
     for(j=0; j<Ny; j++){
         U[j][0] = 0;
         U[j][Ny-1] = 0;
-    }
-}
-
-void next_step(double **u, double **unm1, double **unm2, double *x, double *y, double dt,
-                double Cx2, double Cy2, double dt2){
-    int i, j;
-    double t;
-    double **aux;
-
-    int frames = 20, print_interval = ceil(T/dt/frames), print_counter=print_interval;
-    int n_files = floor(T/dt/print_interval);
-
-    char dir_path[] = "output/multi_matrix/";
-    int file_index=0;
-
-    // #pragma omp parallel private(t, i, j)
-    {
-        for(t=0; t<T; t+=dt){
-            //Boundary Conditions
-            // #pragma omp single nowait
-            {
-                enforce_boundary_conditions(u);
-            }
-            
-
-            //Calculating unm1
-            #pragma omp parallel private(i, j) shared(u, unm1, unm2)
-            for(j=1; j<Ny-1; j++){
-                for(i=1; i<Nx-1; i++){
-                    u[j][i] = -unm2[j][i] + 2*unm1[j][i] + Cx2*(unm1[j][i+1] - 2*unm1[j][i] + unm1[j][i-1]) + 
-                    Cy2*(unm1[j+1][i] - 2*unm1[j][i] + unm1[j-1][i]) 
-                    + dt2*f(x[i],y[i], i, j, t);
-
-                    // u[i][j] = -unm2[i][j] + 2*unm1[i][j] + Cx2*(unm1[i][j+1] - 2*unm1[i][j] + unm1[i][j-1]) + 
-                    // Cy2*(unm1[i+1][j] - 2*unm1[i][j] + unm1[i-1][j]) 
-                    // + dt2*f(x[j],y[j], j, i, t);
-                }
-            }
-
-            // copy_matrix(unm2, unm1, Nx, Ny);
-            // copy_matrix(unm1, u, Nx, Ny);
-
-            // #pragma omp single
-            {
-                if(print_counter >= print_interval){
-                    printf("Current time step: %.2lf/%d\n", t, T);
-                    write_dir_matrix(u, Nx, Ny, dir_path, &file_index);
-                    print_counter=0;
-                }
-                print_counter++;
-
-                switch_matrices(&u, &unm1, &unm2, &aux);
-            }
-            
-        }
     }
 }
 
@@ -184,7 +142,7 @@ int main(int argc, char const *argv[])
     
     // We have to define the number of files in a smart way, since it may not result in a integer value
     int frames = 20, print_interval = ceil(T/dt/frames), print_counter=print_interval;
-    int n_files = floor(T/dt/print_interval);
+    int n_files = floor(T/dt/print_interval)+2;
     
     FILE *time_file;
     time_file = fopen("output/Execution_time.txt", "w");
@@ -217,7 +175,25 @@ int main(int argc, char const *argv[])
     
     
     // Main Algorithm
-    next_step(u, unm1, unm2, x, y, dt, Cx2, Cy2, dt2);
+    for(t=0; t<T; t+=dt){
+        //Boundary Conditions
+        enforce_boundary_conditions(u);
+
+        //Calculating unm1
+        next_step(u, unm1, unm2, x, y, t, Cx2, Cy2, dt2);
+
+        // copy_matrix(unm2, unm1, Nx, Ny);
+        // copy_matrix(unm1, u, Nx, Ny);
+
+        if(print_counter >= print_interval){
+            printf("Current time step: %.2lf/%d\n", t, T);
+            write_dir_matrix(u, Nx, Ny, dir_path, &file_index);
+            print_counter=0;
+        }
+        print_counter++;
+
+        switch_matrices(&u, &unm1, &unm2, &aux);
+    }
 
     printf("=-=-=-=-=-=-=-=-=-=-= End of Processing =-=-=-=-=-=-=-=-=-=-=\n");
 
