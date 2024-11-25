@@ -23,9 +23,9 @@ manipulation
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 
 // Macro Definitions  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-#define Nx 800
-#define Ny 800
-#define T 2
+#define Nx 400
+#define Ny 400
+#define T 30
 #define a 10.0
 #define b 10.0
 // #define dx (a/Nx)
@@ -45,9 +45,15 @@ double I(double x, double y){
 double f(double x, double y, int i, int j, double t){
     // 30*M_PI*0.05 = 4.7123889
 
-    if(i<(Nx/2 + Nx/100) && i>(Nx/2 - Nx/100)){
-        if(j<(Ny/2 + Ny/100) && j>(Ny/2 - Ny/100)){
-            return 30*sin(4.7123889*t);
+    // if(i<(Nx/2 + Nx/100) && i>(Nx/2 - Nx/100)){
+    //     if(j<(Ny/2 + Ny/100) && j>(Ny/2 - Ny/100)){
+    //         return 30*sin(4.7123889*t);
+    //     }
+    // }
+
+    if(i<(Nx/8 + Nx/100) && i>(Nx/8 - Nx/100)){
+        if(j<(Ny/8+ Ny/100) && j>(Ny/8 - Ny/100)){
+            return 45*exp(-t/10)*sin(6.7123889*t);
         }
     }
 
@@ -136,12 +142,12 @@ int main(int argc, char const *argv[])
     double dx = a/Nx, dy = b/Ny;
     double Cx2 = Cx*Cx, Cy2 = Cy*Cy;
     double *x, *y, **u, **unm1, **unm2, **aux;
-    double t, c=1, dt = Cx*dx/c, dt2=dt*dt;
+    double t, c=1.2, dt = Cx*dx/c, dt2=dt*dt;
     int Nt = floor(T/dt);  
     int i, j;
     
     // We have to define the number of files in a smart way, since it may not result in a integer value
-    int frames = 20, print_interval = ceil(T/dt/frames), print_counter=print_interval;
+    int frames = 250, print_interval = ceil(T/dt/frames), print_counter=print_interval;
     int n_files = floor(T/dt/print_interval)+2;
     
     FILE *time_file;

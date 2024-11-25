@@ -213,5 +213,8 @@ Mkfile.old
 dkms.conf
 
 **/.csv
+*.csv
+**/.bin
+*.bin
 
 4.Wave_equation_2D/output/

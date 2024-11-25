@@ -5,6 +5,7 @@ from matplotlib.animation import PillowWriter
 import numpy as np
 import pandas as pd
 import os
+import seaborn
 
 def read_data(path, Nx, Ny):
     global index
@@ -36,7 +37,7 @@ data = read_data(dir_path, Nx, Ny)
 
 ax.set_zlim(z_lim[0], z_lim[1])
 
-plot = [ax.plot_surface(xv, yv, data, cmap="coolwarm", vmin=z_lim[0]/2, vmax=z_lim[1]/2)]
+plot = [ax.plot_surface(xv, yv, data, cmap="flare", vmin=z_lim[0]/2, vmax=z_lim[1]/2)]
 fig.colorbar(plot[0], shrink=0.65, pad=0.1)
 
 ax.set_xlabel("x", fontsize=14)
@@ -51,8 +52,8 @@ def animate(i, Z_time, plot, z_lim):
     data = read_data(dir_path, Nx, Ny)
     
     plot[0].remove()
-    plot[0] = ax.plot_surface(xv, yv, data, cmap="coolwarm", vmin=z_lim[0]/2, vmax=z_lim[1]/2)
-
+    plot[0] = ax.plot_surface(xv, yv, data, cmap="flare", vmin=z_lim[0]/2, vmax=z_lim[1]/2)
+    # plt.savefig(f"figures/frames/frame-{i}.png", dpi=500)
 
 frames = n_files-2
 ani = animation.FuncAnimation(fig, animate, frames=frames, fargs=(data, plot, z_lim), repeat=True)
