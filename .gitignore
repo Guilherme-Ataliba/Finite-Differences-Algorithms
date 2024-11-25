@@ -216,5 +216,6 @@ dkms.conf
 *.csv
 **/.bin
 *.bin
+*.zip
 
 4.Wave_equation_2D/output/
